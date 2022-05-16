@@ -1,0 +1,47 @@
+ReplicaSet
+
+ReplicaSet has matchLabels, whereas ReplicationController its not required
+
+[root@ip-172-31-24-167 05-services]# kubectl get pods
+No resources found in varun namespace.
+[root@ip-172-31-24-167 05-services]# kubectl apply -f kubia-replicaset.yaml
+replicaset.apps/kubia created
+[root@ip-172-31-24-167 05-services]# kubectl get pods
+NAME          READY   STATUS              RESTARTS   AGE
+kubia-8npfp   0/1     ContainerCreating   0          2s
+kubia-t82qb   0/1     ContainerCreating   0          2s
+kubia-txglx   0/1     ContainerCreating   0          2s
+[root@ip-172-31-24-167 05-services]# kubectl get pods --show-labels
+NAME          READY   STATUS    RESTARTS   AGE   LABELS
+kubia-8npfp   1/1     Running   0          68s   app=kubia
+kubia-t82qb   1/1     Running   0          68s   app=kubia
+kubia-txglx   1/1     Running   0          68s   app=kubia
+[root@ip-172-31-24-167 04-controllers]# kubectl get rs
+NAME    DESIRED   CURRENT   READY   AGE
+kubia   3         3         3       4m
+[root@ip-172-31-24-167 04-controllers]# kubectl scale rs kubia --replicas=2
+replicaset.apps/kubia scaled
+[root@ip-172-31-24-167 04-controllers]# kubectl get pods --show-labels
+NAME          READY   STATUS        RESTARTS   AGE     LABELS
+kubia-8npfp   1/1     Running       0          4m50s   app=kubia
+kubia-t82qb   1/1     Running       0          4m50s   app=kubia
+kubia-txglx   0/1     Terminating   0          4m50s   app=kubia
+[root@ip-172-31-24-167 05-services]# kubectl apply -f kubia-svc.yaml
+service/kubia2 created
+[root@ip-172-31-24-167 05-services]# kubectl get pods
+NAME          READY   STATUS    RESTARTS   AGE
+kubia-8npfp   1/1     Running   0          6m22s
+kubia-t82qb   1/1     Running   0          6m22s
+[root@ip-172-31-24-167 05-services]# kubectl get svc
+NAME     TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+kubia2   ClusterIP   10.99.10.99   <none>        80/TCP    11s
+[root@ip-172-31-24-167 05-services]# curl 10.99.10.99:80
+You've hit kubia-t82qb
+[root@ip-172-31-24-167 05-services]# kubectl label rs kubia app=varun --overwrite
+replicaset.apps/kubia labeled
+[root@ip-172-31-24-167 05-services]# kubectl get pods --show-labels
+NAME          READY   STATUS              RESTARTS   AGE     LABELS
+kubia-8npfp   1/1     Running             0          16m     app=varun
+kubia-kbkvg   1/1     Running             0          8m30s   app=kubia
+kubia-t82qb   1/1     Running             0          16m     app=kubia
+kubia-whdp5   0/1     ContainerCreating   0          3s      app=kubia
