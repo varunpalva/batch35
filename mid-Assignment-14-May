@@ -1,7 +1,7 @@
 ReplicaSet
 
-ReplicaSet has matchLabels, whereas ReplicationController its not required
-
+1. ReplicaSet has matchLabels, whereas ReplicationController its not required
+2. 
 [root@ip-172-31-24-167 05-services]# kubectl get pods
 No resources found in varun namespace.
 [root@ip-172-31-24-167 05-services]# kubectl apply -f kubia-replicaset.yaml
@@ -45,3 +45,17 @@ kubia-8npfp   1/1     Running             0          16m     app=varun
 kubia-kbkvg   1/1     Running             0          8m30s   app=kubia
 kubia-t82qb   1/1     Running             0          16m     app=kubia
 kubia-whdp5   0/1     ContainerCreating   0          3s      app=kubia
+
+
+Cronjob
+[root@ip-172-31-24-167 04-controllers]# kubectl apply -f cronjob.yaml
+cronjob.batch/batch-job-every-fifteen-minutes created
+[root@ip-172-31-24-167 04-controllers]# kubectl get cj
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        <none>          22s
+[root@ip-172-31-24-167 04-controllers]# kubectl get po
+NAME                                               READY   STATUS      RESTARTS   AGE
+batch-job-every-fifteen-minutes-1652719500-grmsf   0/1     Completed   0          12m
+NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        12m             13m
+Cronjobs run in a scheduled manner, whereas job created on demand and terminated
