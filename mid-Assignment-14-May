@@ -59,3 +59,18 @@ batch-job-every-fifteen-minutes-1652719500-grmsf   0/1     Completed   0        
 NAME                              SCHEDULE             SUSPEND   ACTIVE   LAST SCHEDULE   AGE
 batch-job-every-fifteen-minutes   0,15,30,45 * * * *   False     0        12m             13m
 Cronjobs run in a scheduled manner, whereas job created on demand and terminated
+
+VOTING APP ASSIGNMENT
+Everytime the pod is deleted, new pod comes up, keeping the application running at all time and providing high availibility. On db deletion, result app was not being updated untill the new pod came up (it wont work as the db holding the data was down)
+Terminologies learnt:
+ Kubectl
+ container
+ swarm
+ cluster
+ charts
+ annotations
+ controller
+ image
+ kube-proxy
+ pod
+ namespace
